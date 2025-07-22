@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface EditModeContextType {
   isEditMode: boolean;
@@ -23,6 +23,21 @@ export function EditModeProvider({ children }: { children: ReactNode }) {
   const toggleEditMode = () => {
     setIsEditMode(prev => !prev);
   };
+  
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'e') {
+        event.preventDefault();
+        toggleEditMode();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <EditModeContext.Provider value={{ isEditMode, toggleEditMode }}>

@@ -1,17 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Mountain, Menu, Edit } from "lucide-react";
+import { Mountain, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useEditMode } from "@/hooks/use-edit-mode";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 
 export function AppHeader() {
-  const { isEditMode, toggleEditMode } = useEditMode();
-
   const navLinks = [
     { href: "#about", label: "About" },
     { href: "#projects", label: "Projects" },
@@ -57,13 +52,6 @@ export function AppHeader() {
           </Sheet>
         </div>
         <div className="flex flex-1 items-center justify-end gap-4">
-          <div className="flex items-center space-x-2">
-            <Switch id="edit-mode-toggle" checked={isEditMode} onCheckedChange={toggleEditMode} />
-            <Label htmlFor="edit-mode-toggle" className="flex items-center gap-2 cursor-pointer">
-              <Edit className="h-4 w-4" />
-              <span>Edit Mode</span>
-            </Label>
-          </div>
           <ThemeToggle />
         </div>
       </div>
