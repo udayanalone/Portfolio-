@@ -20,7 +20,7 @@ export function AppHeader() {
         <nav className="hidden md:flex items-center gap-6 text-sm">
           <Link href="#" className="flex items-center gap-2 font-semibold font-headline text-lg mr-4">
             <Mountain className="h-6 w-6" />
-            <span>Profile Forge</span>
+            <span>Portfolio</span>
           </Link>
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href} className="text-foreground/60 transition-colors hover:text-foreground/80 font-medium">
