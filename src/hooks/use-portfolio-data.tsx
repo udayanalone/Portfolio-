@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { db } from '@/lib/firebase';
+import { ref, onValue, set } from "firebase/database";
 
 interface ProfileData {
   name: string;
@@ -128,27 +130,36 @@ export function PortfolioDataProvider({ children }: { children: ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const savedData = localStorage.getItem('portfolioData');
-      if (savedData) {
-        setDataState(JSON.parse(savedData));
+    const dbRef = ref(db, 'portfolioData');
+    const unsubscribe = onValue(dbRef, (snapshot) => {
+      const dbData = snapshot.val();
+      if (dbData) {
+        setDataState(dbData);
+      } else {
+        // If no data in DB, set initial data
+        set(dbRef, initialData);
       }
-    } catch (error) {
-      console.error("Failed to parse portfolio data from localStorage", error);
-    }
-    setIsLoaded(true);
+      setIsLoaded(true);
+    }, (error) => {
+      console.error("Firebase read failed: " + error.message);
+      setIsLoaded(true);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const setData = (newData: PortfolioData) => {
-    setDataState(newData);
-    try {
-        localStorage.setItem('portfolioData', JSON.stringify(newData));
-    } catch (error) {
-        console.error("Failed to save portfolio data to localStorage", error);
-    }
+    // Note: We are setting state locally for immediate UI response,
+    // but the single source of truth is now Firebase.
+    // The onValue listener will keep the local state in sync.
+    const dbRef = ref(db, 'portfolioData');
+    set(dbRef, newData).catch(error => {
+      console.error("Firebase write failed: " + error.message);
+    });
   };
   
   if (!isLoaded) {
+    // Render a loading state or nothing until data is loaded
     return null; 
   }
 
