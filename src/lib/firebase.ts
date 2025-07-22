@@ -10,11 +10,12 @@ const firebaseConfig = {
   authDomain: "android-01-5209b.firebaseapp.com",
   databaseURL: "https://android-01-5209b-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "android-01-5209b",
-  storageBucket: "android-01-5209b.firebasestorage.app",
+  storageBucket: "android-01-5209b.appspot.com",
   messagingSenderId: "971036103300",
   appId: "1:971036103300:web:b10b5c149110d6693a68d1",
   measurementId: "G-7SW5X9HZL3"
 };
+
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
