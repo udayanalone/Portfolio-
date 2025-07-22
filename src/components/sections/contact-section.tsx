@@ -1,6 +1,17 @@
+"use client";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
+import { useEditMode } from "@/hooks/use-edit-mode";
+import { Input } from "@/components/ui/input";
 
 export function ContactSection() {
+  const { data, setData } = usePortfolioData();
+  const { isEditMode } = useEditMode();
+
+  const handleContactChange = (field: keyof typeof data.contact, value: string) => {
+    setData({ ...data, contact: { ...data.contact, [field]: value } });
+  };
+
   return (
     <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
@@ -13,15 +24,39 @@ export function ContactSection() {
         <div className="mx-auto w-full max-w-sm space-y-4 pt-8">
           <div className="flex items-center justify-center gap-4 text-lg">
             <Mail className="h-5 w-5 text-primary" />
-            <a href="mailto:alex.doe@email.com" className="hover:underline">alex.doe@email.com</a>
+            {isEditMode ? (
+              <Input
+                value={data.contact.email}
+                onChange={(e) => handleContactChange('email', e.target.value)}
+                placeholder="Email"
+              />
+            ) : (
+              <a href={`mailto:${data.contact.email}`} className="hover:underline">{data.contact.email}</a>
+            )}
           </div>
           <div className="flex items-center justify-center gap-4 text-lg">
             <Phone className="h-5 w-5 text-primary" />
-            <a href="tel:+15551234567" className="hover:underline">+1 (555) 123-4567</a>
+             {isEditMode ? (
+              <Input
+                value={data.contact.phone}
+                onChange={(e) => handleContactChange('phone', e.target.value)}
+                placeholder="Phone"
+              />
+            ) : (
+              <a href={`tel:${data.contact.phone}`} className="hover:underline">{data.contact.phone}</a>
+            )}
           </div>
           <div className="flex items-center justify-center gap-4 text-lg">
             <MapPin className="h-5 w-5 text-primary" />
-            <p>San Francisco, CA</p>
+             {isEditMode ? (
+              <Input
+                value={data.contact.location}
+                onChange={(e) => handleContactChange('location', e.target.value)}
+                placeholder="Location"
+              />
+            ) : (
+              <p>{data.contact.location}</p>
+            )}
           </div>
         </div>
       </div>
